@@ -22,6 +22,7 @@ class Project(models.Model):
     project_img=models.ImageField(upload_to='image')
     project_url=models.URLField(max_length=200)
     user= models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
+    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.project_name
@@ -29,26 +30,13 @@ class Project(models.Model):
     def save_project(self):
         self.save()
 
-class BlogPost(models.Model):
-    topic = models.CharField(max_length=100, blank=False)
-    title = models.CharField(max_length=100, blank=False)
-
-    image = models.ImageField(upload_to='blog-photos', blank=True)
-    content = models.TextField(blank=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.topic} Blog | {self.title}'
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    blog = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'Like: {self.user.username} | {self.blog.title}'
+        return f'Like: {self.profile.user} | {self.project.project_name}'
 
 class Review(models.Model):
     Rating=[
@@ -67,5 +55,12 @@ class Review(models.Model):
     Design=models.IntegerField(choices=Rating, default='1' )
     Usability=models.IntegerField(choices=Rating, default='1' )
     Content=models.IntegerField(choices=Rating, default='1' )
-    
+
+def mean(self):
+            sum=0
+            sum=(self.Design + self.Usability   + self.Content)
+            avg= (sum/3)
+            return avg
+            
+average=property(mean)    
     
