@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
-from backend.models import BlogPost, Profile, Project,Review,Like
+from backend.models import Profile, Project,Review,Like
 from rest_framework import viewsets,permissions
-from backend.serializers import ProfileSerializer, ProjectSerializer, ReviewSerializer,ShowBlogSerializer,CreateBlogSerializer,DetailedBlogSerializer,ShowLikeSerializer,CreateLikeSerializer
+from backend.serializers import ProfileSerializer, ProjectSerializer,UpdateProjectSerializer, ReviewSerializer,ShowProjectSerializer,CreateProjectSerializer,DetailedProjectSerializer,ShowLikeSerializer,CreateLikeSerializer
 # Create your views here.
 class ProfileApi(viewsets.ModelViewSet):
     
@@ -13,26 +13,13 @@ class ProfileApi(viewsets.ModelViewSet):
 class ProjectApi(viewsets.ModelViewSet):
     
     queryset=Project.objects.all()
-    serializer_class=ProjectSerializer
-    permission_classes=[permissions.AllowAny]
-
-    
-class ReviewApi(viewsets.ModelViewSet):
-    
-    queryset=Review.objects.all()
-    serializer_class=ReviewSerializer
-    permission_classes=[permissions.AllowAny]
-
-class BlogApi(viewsets.ModelViewSet):
-    
-    queryset=BlogPost.objects.all()
-    serializer_class={
-        'show': ShowBlogSerializer,
-        'create': CreateBlogSerializer,
-        'update': CreateBlogSerializer,
-        'detailed': DetailedBlogSerializer,
+    serializer_class=ProjectSerializer,{
+        'show': ShowProjectSerializer,
+        'create': CreateProjectSerializer,
+        'update': UpdateProjectSerializer,
+        'detailed': DetailedProjectSerializer,
          }
-    permission_classes=[permissions.AllowAny]    
+    permission_classes=[permissions.AllowAny]
     def create(self, request, *args, **kwargs):
         author = request.author
         request.data['author'] = author.pk
@@ -43,7 +30,16 @@ class BlogApi(viewsets.ModelViewSet):
         request.data['author'] = author.pk
         return super().update(request, *args, **kwargs)
 
-class likesApi(viewsets.ModelViewSet):
+    
+class ReviewApi(viewsets.ModelViewSet):
+    
+    queryset=Review.objects.all()
+    serializer_class=ReviewSerializer
+    permission_classes=[permissions.AllowAny]
+
+
+
+class LikesApi(viewsets.ModelViewSet):
 
     serializer_class={
         'show': ShowLikeSerializer,
