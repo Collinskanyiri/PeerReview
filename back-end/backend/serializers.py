@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from backend.models import Profile, Project, Review, BlogPost,Like
+from backend.models import Profile, Project, Review,Like
+
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -40,36 +41,43 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
 
 
-class ShowBlogSerializer(serializers.ModelSerializer):
+class ShowProjectSerializer(serializers.ModelSerializer):
     
     Profile = ProfileSerializer
 
     class Meta:
-        model = BlogPost
+        model = Project
         exclude = ('content',)
         depth = 1
 
 
-class CreateBlogSerializer(serializers.ModelSerializer):
+class CreateProjectSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = BlogPost
+        model = Project
         fields = '__all__'
         extra_kwargs = {'image': {'required': False, 'allow_null': True}}
 
+class UpdateProjectSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Project
+        fields = '__all__'
+               
 
-class DetailedBlogSerializer(serializers.ModelSerializer):
+
+class DetailedProjectSerializer(serializers.ModelSerializer):
     
     Profile = ProfileSerializer
-
     class Meta:
-        model = BlogPost
+        model = Project
         fields = '__all__'
         depth = 1
+
 class ShowLikeSerializer(serializers.ModelSerializer):
     
     Profile = ProfileSerializer
-    blog = ShowBlogSerializer(help_text='blog serializer')
+    project = ShowProjectSerializer(help_text='project serializer')
 
     class Meta:
         model = Like
